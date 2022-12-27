@@ -1,0 +1,17 @@
+#include <ruby.h>
+
+static VALUE
+hacks_rb_type(VALUE mod, VALUE x)
+{
+    return INT2NUM(rb_type(x));
+}
+
+void Init_hacks(void)
+{
+    VALUE rb_mHacks = rb_define_module("Hacks");
+<%- constants.each do |ruby_name, c_name| -%>
+    rb_define_const(rb_mHacks, "<%= ruby_name %>", INT2NUM(<%= c_name %>));
+<%- end -%>
+
+    rb_define_singleton_method(rb_mHacks, "rb_type", hacks_rb_type, 1);
+}
