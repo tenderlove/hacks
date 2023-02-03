@@ -15,14 +15,20 @@ void Init_hacks(void)
 
     VALUE offsets = rb_hash_new();
     VALUE tmp;
+    VALUE tmp2;
 <%- structs.each do |struct_name, members| -%>
     tmp = rb_hash_new();
   <%- members.each do |member_name| -%>
-    rb_hash_aset(tmp, rb_str_new2("<%= member_name %>"), INT2NUM(offsetof(struct <%= struct_name %>, <%= member_name %>)));
+    tmp2 = rb_ary_new();
+    // Offset
+    rb_ary_store(tmp2, 0, INT2NUM(offsetof(struct <%= struct_name %>, <%= member_name %>)));
+    // Size
+    rb_ary_store(tmp2, 1, INT2NUM(sizeof(((struct <%= struct_name %> *)0)-><%= member_name %>)));
+    rb_hash_aset(tmp, rb_str_new2("<%= member_name %>"), tmp2);
   <%- end -%>
     rb_hash_aset(offsets, rb_str_new2("<%= struct_name %>"), tmp);
 <%- end -%>
-    rb_define_const(rb_mHacks, "OFFSETS", offsets);
+    rb_define_const(rb_mHacks, "STRUCTS", offsets);
 
     rb_define_singleton_method(rb_mHacks, "rb_type", hacks_rb_type, 1);
 }
