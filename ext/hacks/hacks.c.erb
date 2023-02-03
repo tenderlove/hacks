@@ -13,5 +13,16 @@ void Init_hacks(void)
     rb_define_const(rb_mHacks, "<%= ruby_name %>", INT2NUM(<%= c_name %>));
 <%- end -%>
 
+    VALUE offsets = rb_hash_new();
+    VALUE tmp;
+<%- structs.each do |struct_name, members| -%>
+    tmp = rb_hash_new();
+  <%- members.each do |member_name| -%>
+    rb_hash_aset(tmp, rb_str_new2("<%= member_name %>"), INT2NUM(offsetof(struct <%= struct_name %>, <%= member_name %>)));
+  <%- end -%>
+    rb_hash_aset(offsets, rb_str_new2("<%= struct_name %>"), tmp);
+<%- end -%>
+    rb_define_const(rb_mHacks, "OFFSETS", offsets);
+
     rb_define_singleton_method(rb_mHacks, "rb_type", hacks_rb_type, 1);
 }
