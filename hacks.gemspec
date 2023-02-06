@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "hacks"
-  s.version     = "0.0.1"
+  s.version     = "0.0.2"
   s.summary     = "Ruby C internals exposed as Ruby"
   s.description = "These are some hacks I use. This gem exposes some Ruby C internals as Ruby functions and constants"
   s.authors     = ["Aaron Patterson"]
