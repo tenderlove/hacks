@@ -1,6 +1,25 @@
 #include <ruby.h>
 
 static VALUE
+hacks_rb_intern_str(VALUE mod, VALUE x)
+{
+    return rb_intern_str(x);
+}
+
+static VALUE
+hacks_rb_gc_writebarrier(VALUE mod, VALUE x, VALUE y)
+{
+    rb_gc_writebarrier(x, y);
+    return Qtrue;
+}
+
+static VALUE
+hacks_rb_obj_class(VALUE mod, VALUE x)
+{
+    return rb_obj_class(x);
+}
+
+static VALUE
 hacks_rb_type(VALUE mod, VALUE x)
 {
     return INT2NUM(rb_type(x));
@@ -38,4 +57,7 @@ void Init_hacks(void)
 
     rb_define_singleton_method(rb_mHacks, "rb_type", hacks_rb_type, 1);
     rb_define_singleton_method(rb_mHacks, "rb_id2sym", hacks_rb_id2sym, 1);
+    rb_define_singleton_method(rb_mHacks, "rb_obj_class", hacks_rb_obj_class, 1);
+    rb_define_singleton_method(rb_mHacks, "rb_gc_writebarrier", hacks_rb_gc_writebarrier, 2);
+    rb_define_singleton_method(rb_mHacks, "rb_intern_str", hacks_rb_intern_str, 1);
 }
