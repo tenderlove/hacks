@@ -3,7 +3,7 @@
 static VALUE
 hacks_rb_intern_str(VALUE mod, VALUE x)
 {
-    return rb_intern_str(x);
+    return LONG2NUM(rb_intern_str(x));
 }
 
 static VALUE
