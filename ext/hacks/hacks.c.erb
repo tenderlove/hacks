@@ -31,6 +31,14 @@ hacks_rb_id2sym(VALUE mod, VALUE x)
     return rb_id2sym((ID)NUM2INT(x));
 }
 
+<%- fps.each do |name| -%>
+static VALUE
+hacks_fp_<%= name %>(VALUE mod)
+{
+    return SIZET2NUM((size_t)<%= name %>);
+}
+<%- end -%>
+
 void Init_hacks(void)
 {
     VALUE rb_mHacks = rb_define_module("Hacks");
@@ -60,4 +68,9 @@ void Init_hacks(void)
     rb_define_singleton_method(rb_mHacks, "rb_obj_class", hacks_rb_obj_class, 1);
     rb_define_singleton_method(rb_mHacks, "rb_gc_writebarrier", hacks_rb_gc_writebarrier, 2);
     rb_define_singleton_method(rb_mHacks, "rb_intern_str", hacks_rb_intern_str, 1);
+
+    VALUE rb_mFPs = rb_define_module_under(rb_mHacks, "FunctionPointers");
+<%- fps.each do |name| -%>
+    rb_define_singleton_method(rb_mFPs, "<%= name %>", hacks_fp_<%= name %>, 0);
+<%- end -%>
 }
